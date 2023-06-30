@@ -1,0 +1,42 @@
+{% extends 'gramm/base.html' %}
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mx-auto text-center">
+    <div class="card mb-3 mx-auto" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if user.photo %}
+                <img src="/media/user_photos/{{ user.photo }}" class="img-fluid rounded-start" alt="">
+                {% else %}
+                <img src="/media/avatar.jpeg" class="img-fluid rounded-start" alt="">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user.user.username }}</h5>
+                    <p class="card-text">{{ user.user.first_name }}</p>
+                    <p class="card-text">{{ user.user.last_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-sm">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <img src="/media/{{ post.photo }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">{{ post.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
