@@ -67,10 +67,19 @@ WSGI_APPLICATION = 'DjangoGramm.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'marinel12345',
+        'HOST': 'localhost',
+        'PORT': '5433',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'test_db',
         'USER': 'postgres',
         'PASSWORD': 'marinel12345',
         'HOST': 'localhost',

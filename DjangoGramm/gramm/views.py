@@ -1,36 +1,22 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-
+from .forms import *
 from gramm.models import *
 
 
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.order_by('-id').all()
     return render(request, 'gramm/index.html', {'posts': posts})
 
 
 def register_user(request):
     if request.method == 'POST':
-        if request.POST.get('password1') != request.POST.get('password2') or len(request.POST.get('password1')) < 4:
-            return render(request, 'gramm/register.html', {'error_message': 'password does not match'})
-        if User.objects.filter(username=request.POST.get('username')).exists():
-            return HttpResponse('<h3>This user already exists</h3>', status=200)
-        user = User.objects.create_user(
-            username=request.POST.get('username'),
-            email=request.POST.get('email'),
-            first_name=request.POST.get('first_name'),
-            last_name=request.POST.get('last_name'),
-            password=request.POST.get('password1'),
-            is_active=True,
-        )
-        Person(
-            user=user,
-            bio=request.POST.get('bio'),
-            photo=request.FILES.get('photo'),
-        ).save()
-        return redirect('/')
-    return render(request, 'gramm/register.html')
+        form = RegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    form = RegistrationForm()
+    return render(request, 'gramm/register.html', {'form': form})
 
 
 def login_user(request):
@@ -47,23 +33,20 @@ def login_user(request):
 
 def profile_user(request):
     active_user = Person.objects.filter(user=request.user).first()
-    posts = Post.objects.filter(user=active_user.user).all()
-    print(posts)
+    posts = Post.objects.filter(user=active_user.user).order_by('-id').all()
     return render(request, 'gramm/profile.html', {'user': active_user, 'posts': posts})
 
 
 def add_post(request):
     if request.method == 'POST':
-        photo = request.FILES.get('photo')
-        comments = request.POST.get('comments')
-        if photo is None:
-            return render(request, 'gramm/addpost.html', {'msg': 'Photo not added'})
-        Post(
-            user=request.user,
-            photo=photo,
-            description=comments,
-        ).save()
-    return render(request, 'gramm/addpost.html')
+        form = PostForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+            return render(request, 'gramm/addpost.html', {'form': form})
+    form = PostForm(user=request.user)
+    return render(request, 'gramm/addpost.html', {'form': form})
 
 
 def logout_user(request):
