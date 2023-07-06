@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .forms import *
 from gramm.models import *
 
@@ -31,12 +32,14 @@ def login_user(request):
     return render(request, 'gramm/login.html')
 
 
+@login_required
 def profile_user(request):
     active_user = Person.objects.filter(user=request.user).first()
     posts = Post.objects.filter(user=active_user.user).order_by('-id').all()
     return render(request, 'gramm/profile.html', {'user': active_user, 'posts': posts})
 
 
+@login_required
 def add_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, user=request.user)
@@ -49,6 +52,7 @@ def add_post(request):
     return render(request, 'gramm/addpost.html', {'form': form})
 
 
+@login_required
 def logout_user(request):
     logout(request)
     return redirect('/')

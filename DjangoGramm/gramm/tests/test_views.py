@@ -1,7 +1,17 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from ..models import Person, Post
+from PIL import Image
+import io
+
+
+def temporary_image():
+    bts = io.BytesIO()
+    img = Image.new("RGB", (100, 100))
+    img.save(bts, 'jpeg')
+    return SimpleUploadedFile("test.jpg", bts.getvalue())
 
 
 class MyViewTests(TestCase):
@@ -40,7 +50,9 @@ class MyViewTests(TestCase):
 
     def test_create_post(self):
         self.client.login(username='testuser', password='testpassword')
+
         response = self.client.post(reverse('add_post'),
-                                    {'photo': 'test_photo2.jpg', 'description': 'New post'})
-        self.assertEqual(response.status_code, 200)
+                                    {'photo': temporary_image(), 'description': 'New post',
+                                     'user': self.user.id}, format='multipart')
+        self.assertRedirects(response, reverse('profile'))
         self.assertEqual(Post.objects.count(), 2)
