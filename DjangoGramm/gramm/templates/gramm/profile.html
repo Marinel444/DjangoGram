@@ -9,7 +9,7 @@ Profile
         <div class="row g-0">
             <div class="col-md-4">
                 {% if user.photo %}
-                <img src="/media/user_photos/{{ user.photo }}" class="img-fluid rounded-start" alt="">
+                <img src="/media/{{ user.photo }}" class="img-fluid rounded-start" alt="">
                 {% else %}
                 <img src="/media/avatar.jpeg" class="img-fluid rounded-start" alt="">
                 {% endif %}
