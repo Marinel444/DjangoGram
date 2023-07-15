@@ -28,5 +28,11 @@ class Tag(models.Model):
         return self.name
 
 
+class Follower(models.Model):
+    follower_id = models.ForeignKey(User, related_name="following", on_delete=models.CASCADE)
+    following_user_id = models.ForeignKey(User, related_name="followers", on_delete=models.CASCADE)
+
+
 class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    person_id = models.ForeignKey(User, related_name="user_likes", on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="liked_post", on_delete=models.CASCADE)

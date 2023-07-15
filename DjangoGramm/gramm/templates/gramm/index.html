@@ -5,15 +5,27 @@ DjangoGramm
 
 {% block content %}
 {% if request.user.is_authenticated %}
-{% for post in posts%}
+{% for item in context %}
 <div class="container-sm">
     <div style="max-width: 600px;" class="mx-auto">
         <div class="card mb-3">
-            <img src="media/{{ post.photo }}" class="card-img-top" alt="...">
+            <img src="media/{{ item.post.photo }}" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">{{ post.user.username }}</h5>
-                <p class="card-text">{{ post.description }}</p>
-                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                <h5 class="card-title">
+                    <a href="{% url 'account' user_id=item.post.user.id %}">
+                        {{ item.post.user.username }}
+                    </a>
+                    </a>
+                </h5>
+                <p class="card-text">{{ item.post.description }}</p>
+                <h5 class="card-title">
+                    <form enctype="multipart/form-data" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="{{ item.post.pk }}" class="btn btn-info">Like</button>
+                    </form>
+                    <p class="card-text likes-count"><small class="text-body-secondary">{{ item.like_count }}</small>
+                    </p>
+                </h5>
             </div>
         </div>
     </div>

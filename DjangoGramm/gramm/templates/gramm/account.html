@@ -1,6 +1,6 @@
 {% extends 'gramm/base.html' %}
 {% block title %}
-Profile
+Account
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,16 @@ Profile
                     <h5 class="card-title">{{ user.user.username }}</h5>
                     <p class="card-text">{{ user.user.first_name }}</p>
                     <p class="card-text">{{ user.user.last_name }}</p>
-                    <button type="button" class="btn btn-primary">Подписчики</button>
+                    <form enctype="multipart/form-data" method="post">
+                        {% csrf_token %}
+                        {% if following %}
+                        <button type="submit" name="action" value="unsubscribe" class="btn btn-secondary">Отписаться
+                        </button>
+                        {% else %}
+                        <button type="submit" name="action" value="subscribe" class="btn btn-primary">Подписаться
+                        </button>
+                        {% endif %}
+                    </form>
                 </div>
             </div>
         </div>
