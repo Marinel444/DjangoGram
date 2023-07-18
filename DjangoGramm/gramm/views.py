@@ -3,6 +3,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from gramm.models import *
+from django.http import JsonResponse
+
+
+def like(request):
+    if request.method == 'POST':
+        post_like = request.POST.get('post_id')
+        print(post_like)
+        post = Post.objects.filter(pk=post_like).first()
+
+        if post:
+            post_obj = Like.objects.filter(person_id=request.user, post=post).first()
+            if not post_obj:
+                new_like = Like.objects.create(person_id=request.user, post=post)
+                new_like.save()
+
+            else:
+                post_obj.delete()
+            like_count = Like.objects.filter(post=post).count()
+            return JsonResponse({'like_count': like_count})
+
+    return JsonResponse({}, status=400)
 
 
 def index(request):
@@ -13,15 +34,19 @@ def index(request):
             like.append(Like.objects.filter(post=post).count())
         else:
             like.append(0)
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        post_like = Post.objects.filter(pk=action).first()
-        if not Like.objects.filter(person_id=request.user,post=post_like).exists():
-            new_like = Like.objects.create(person_id=request.user, post=post_like)
-            new_like.save()
+    # if request.method == 'POST':
+    #     action = request.POST.get('action')
+    #     post_like = Post.objects.filter(pk=action).first()
+    #     if not Like.objects.filter(person_id=request.user, post=post_like).exists():
+    #         new_like = Like.objects.create(person_id=request.user, post=post_like)
+    #         new_like.save()
+    #     else:
+    #         delete_like = Like.objects.filter(person_id=request.user, post=post_like).first()
+    #         delete_like.delete()
 
     data = zip(posts, like)
-    context = [{'post': post, 'like_count': like_count} for post, like_count in data]
+    context = [{'post': post, 'like_count': like_count, 'post_id': post.id} for post, like_count in data]
+
     return render(request, 'gramm/index.html', {'context': context})
 
 

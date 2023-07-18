@@ -14,4 +14,5 @@ urlpatterns = [
     path('add_post/', add_post, name='add_post'),
     path('profile/', profile_user, name='profile'),
     path('account/<int:user_id>/', account_user, name='account'),
+    path('like/', like, name='like'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

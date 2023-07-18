@@ -1,4 +1,5 @@
 {% extends 'gramm/base.html' %}
+{% load static %}
 {% block title %}
 DjangoGramm
 {% endblock %}
@@ -15,21 +16,42 @@ DjangoGramm
                     <a href="{% url 'account' user_id=item.post.user.id %}">
                         {{ item.post.user.username }}
                     </a>
-                    </a>
                 </h5>
                 <p class="card-text">{{ item.post.description }}</p>
                 <h5 class="card-title">
-                    <form enctype="multipart/form-data" method="post">
-                        {% csrf_token %}
-                        <button type="submit" name="action" value="{{ item.post.pk }}" class="btn btn-info">Like</button>
-                    </form>
-                    <p class="card-text likes-count"><small class="text-body-secondary">{{ item.like_count }}</small>
+                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.post.pk }}">Лайк</button>
+                    <p class="card-text likes-count" id="likes-count-{{ item.post.pk }}">
+                        <small class="text-body-secondary">{{ item.like_count }}</small>
                     </p>
                 </h5>
             </div>
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.like-btn').click(function() {
+        var postID = $(this).data('post');
+        var likeCountElement = $('#likes-count-' + postID);
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "like" %}',
+            data: {
+                'post_id': postID,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                likeCountElement.text(response.like_count);
+            },
+            error: function (xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
 {% endfor %}
 {% endif %}
 {% endblock %}
