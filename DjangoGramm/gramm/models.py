@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
-    photo = models.ImageField(upload_to='user_photos/', blank=True)
+    photo = CloudinaryField('image', blank=True)
 
     def __str__(self):
         return self.user.username
@@ -13,7 +14,7 @@ class Person(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='post_photo/')
+    photo = CloudinaryField('image', blank=True)
     description = models.TextField()
 
     def __str__(self):

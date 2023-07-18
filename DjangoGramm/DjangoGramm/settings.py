@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     "gramm",
+    "cloudinary",
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +109,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+cloudinary.config(
+    cloud_name="dhr0avnlm",
+    api_key="178563197547516",
+    api_secret="dzNblAamPZQL4QwOWTlBYGF_OTo"
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
