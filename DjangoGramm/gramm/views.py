@@ -1,53 +1,40 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from django.db.models import Count
 from gramm.models import *
 from django.http import JsonResponse
 
 
+@login_required
 def like(request):
     if request.method == 'POST':
         post_like = request.POST.get('post_id')
-        print(post_like)
         post = Post.objects.filter(pk=post_like).first()
-
         if post:
             post_obj = Like.objects.filter(person_id=request.user, post=post).first()
             if not post_obj:
-                new_like = Like.objects.create(person_id=request.user, post=post)
-                new_like.save()
-
+                Like.objects.create(person_id=request.user, post=post)
             else:
                 post_obj.delete()
-            like_count = Like.objects.filter(post=post).count()
-            return JsonResponse({'like_count': like_count})
+        like_count = Like.objects.filter(post=post).count()
+        return JsonResponse({'like_count': like_count})
 
     return JsonResponse({}, status=400)
 
 
 def index(request):
-    posts = Post.objects.order_by('-id').all()
-    like = []
-    for post in posts:
-        if Like.objects.filter(post=post).exists():
-            like.append(Like.objects.filter(post=post).count())
-        else:
-            like.append(0)
-    # if request.method == 'POST':
-    #     action = request.POST.get('action')
-    #     post_like = Post.objects.filter(pk=action).first()
-    #     if not Like.objects.filter(person_id=request.user, post=post_like).exists():
-    #         new_like = Like.objects.create(person_id=request.user, post=post_like)
-    #         new_like.save()
-    #     else:
-    #         delete_like = Like.objects.filter(person_id=request.user, post=post_like).first()
-    #         delete_like.delete()
-
-    data = zip(posts, like)
-    context = [{'post': post, 'like_count': like_count, 'post_id': post.id} for post, like_count in data]
-
+    posts = Post.objects.annotate(like_count=Count('liked_post')).order_by('-id').all()
+    context = [{'post': post, 'like_count': post.like_count} for post in posts]
     return render(request, 'gramm/index.html', {'context': context})
+
+
+# def index(request):
+#     posts = Post.objects.prefetch_related('liked_post').order_by('-id').all()
+#     like_counts = {post.id: post.liked_post.count() for post in posts}
+#     context = [{'post': post, 'like_count': like_counts.get(post.id, 0)} for post in posts]
+#     return render(request, 'gramm/index.html', {'context': context})
 
 
 def register_user(request):
@@ -100,7 +87,7 @@ def account_user(request, user_id):
             subscribe = Follower.objects.create(follower_id=profile.user, following_user_id=request.user)
             subscribe.save()
             return redirect(request.path)
-        if action == 'unsubscribe':
+        else:
             unsubscribe = Follower.objects.filter(follower_id=profile.user, following_user_id=request.user).first()
             unsubscribe.delete()
             return redirect(request.path)

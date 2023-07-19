@@ -1,8 +1,12 @@
-.venv/
+venv/
 *.sqlite3
 .DS_Store
+.idea/
 media/
 db.sqlite3
-git rm -r --cached
-/.gitignore
+DjangoGramm/DjangoGramm/__pycache__/
+DjangoGramm/gramm/__pycache__/
+DjangoGramm/gramm/migrations/__pycache__/
+DjangoGramm/gramm/tests/__pycache__/
+
 

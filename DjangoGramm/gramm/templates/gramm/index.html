@@ -19,7 +19,9 @@ DjangoGramm
                 </h5>
                 <p class="card-text">{{ item.post.description }}</p>
                 <h5 class="card-title">
-                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.post.pk }}">Лайк</button>
+                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.post.pk }}"
+                            id="post-form-{{ item.post.pk }}">Лайк
+                    </button>
                     <p class="card-text likes-count" id="likes-count-{{ item.post.pk }}">
                         <small class="text-body-secondary">{{ item.like_count }}</small>
                     </p>
@@ -31,8 +33,9 @@ DjangoGramm
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('.like-btn').click(function() {
+    $('#post-form-{{ item.post.pk }}').on('click', function() {
         var postID = $(this).data('post');
+        console.log(postID)
         var likeCountElement = $('#likes-count-' + postID);
 
         $.ajax({
@@ -51,7 +54,11 @@ $(document).ready(function() {
         });
     });
 });
+
+
 </script>
+
+
 {% endfor %}
 {% endif %}
 {% endblock %}
