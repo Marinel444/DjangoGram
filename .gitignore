@@ -1,0 +1,8 @@
+.venv/
+*.sqlite3
+.DS_Store
+media/
+db.sqlite3
+git rm -r --cached
+/.gitignore
+
