@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -26,15 +26,7 @@ def like(request):
 
 def index(request):
     posts = Post.objects.annotate(like_count=Count('liked_post')).order_by('-id').all()
-    context = [{'post': post, 'like_count': post.like_count} for post in posts]
-    return render(request, 'gramm/index.html', {'context': context})
-
-
-# def index(request):
-#     posts = Post.objects.prefetch_related('liked_post').order_by('-id').all()
-#     like_counts = {post.id: post.liked_post.count() for post in posts}
-#     context = [{'post': post, 'like_count': like_counts.get(post.id, 0)} for post in posts]
-#     return render(request, 'gramm/index.html', {'context': context})
+    return render(request, 'gramm/index.html', {'context': posts})
 
 
 def register_user(request):
@@ -61,7 +53,7 @@ def login_user(request):
 
 @login_required
 def profile_user(request):
-    active_user = Person.objects.filter(user=request.user).first()
+    active_user = get_object_or_404(Person, user=request.user)
     posts = Post.objects.filter(user=active_user.user).order_by('-id').all()
     return render(request, 'gramm/profile.html', {'user': active_user, 'posts': posts})
 

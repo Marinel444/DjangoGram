@@ -10,19 +10,19 @@ DjangoGramm
 <div class="container-sm">
     <div style="max-width: 600px;" class="mx-auto">
         <div class="card mb-3">
-            <img src="{{ item.post.photo.url }}" class="card-img-top" alt="...">
+            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title">
-                    <a href="{% url 'account' user_id=item.post.user.id %}">
-                        {{ item.post.user.username }}
+                    <a href="{% url 'account' user_id=item.user.id %}">
+                        {{ item.user.username }}
                     </a>
                 </h5>
-                <p class="card-text">{{ item.post.description }}</p>
+                <p class="card-text">{{ item.description }}</p>
                 <h5 class="card-title">
-                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.post.pk }}"
-                            id="post-form-{{ item.post.pk }}">Лайк
+                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.pk }}"
+                            id="post-form-{{ item.pk }}">Лайк
                     </button>
-                    <p class="card-text likes-count" id="likes-count-{{ item.post.pk }}">
+                    <p class="card-text likes-count" id="likes-count-{{ item.pk }}">
                         <small class="text-body-secondary">{{ item.like_count }}</small>
                     </p>
                 </h5>
@@ -33,7 +33,7 @@ DjangoGramm
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#post-form-{{ item.post.pk }}').on('click', function() {
+    $('#post-form-{{ item.pk }}').on('click', function() {
         var postID = $(this).data('post');
         console.log(postID)
         var likeCountElement = $('#likes-count-' + postID);
