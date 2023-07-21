@@ -9,11 +9,7 @@ Profile
         <div class="row g-0">
             <div class="col-md-4">
                 {% if user.photo %}
-<<<<<<< HEAD
-                <img src="{{ user.photo.url }}" class="img-fluid rounded-start" alt="">
-=======
                 <img src="/media/{{ user.photo }}" class="img-fluid rounded-start" alt="">
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
                 {% else %}
                 <img src="/media/avatar.jpeg" class="img-fluid rounded-start" alt="">
                 {% endif %}
@@ -34,7 +30,7 @@ Profile
         {% for post in posts %}
         <div class="col">
             <div class="card" style="width: 18rem;">
-                <img src="{{ post.photo.url }}" class="card-img-top" alt="...">
+                <img src="/media/{{ post.photo }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <p class="card-text">{{ post.description }}</p>

@@ -32,8 +32,6 @@ def like(request):
 def index(request):
     posts = Post.objects.annotate(like_count=Count('liked_post')).order_by('-id').all()
     return render(request, 'gramm/index.html', {'context': posts})
-    posts = Post.objects.order_by('-id').all()
-    return render(request, 'gramm/index.html', {'posts': posts})
 
 
 def register_user(request):

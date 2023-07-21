@@ -1,10 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-<<<<<<< HEAD
-from ..models import Person, Post, Like, Follower
-=======
 from ..models import Person, Post
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
 
 
 class ModelCreationTestCase(TestCase):
@@ -15,12 +11,6 @@ class ModelCreationTestCase(TestCase):
         self.person2 = Person.objects.create(user=self.user2, bio='Test bio2', photo='test2.jpg')
         self.post = Post.objects.create(user=self.user, photo='test_photo.jpg', description='Test description')
         self.post2 = Post.objects.create(user=self.user2, photo='test_photo2.jpg', description='Test description2')
-<<<<<<< HEAD
-        self.like = Like.objects.create(person_id=self.user, post=self.post)
-        self.like2 = Like.objects.create(person_id=self.user2, post=self.post2)
-        self.follower = Follower.objects.create(follower_id=self.user, following_user_id=self.user2)
-=======
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
 
     def test_person_creation(self):
         self.assertEqual(self.person.user, self.user)
@@ -32,51 +22,17 @@ class ModelCreationTestCase(TestCase):
         self.assertEqual(self.post.photo, 'test_photo.jpg')
         self.assertEqual(self.post.description, 'Test description')
 
-<<<<<<< HEAD
-    def test_like_creation(self):
-        self.assertEqual(self.like.post, self.post)
-        self.assertEqual(self.like.person_id, self.user)
-
-    def test_follower_creation(self):
-        self.assertEqual(self.follower.follower_id, self.user)
-        self.assertEqual(self.follower.following_user_id, self.user2)
-
     def test_get_db(self):
         persons = Person.objects.all()
         posts = Post.objects.all()
-        likes = Like.objects.all()
-        follower = Follower.objects.all()
-        self.assertEqual(follower.count(), 1)
-        self.assertEqual(likes.count(), 2)
-=======
-    def test_get_db(self):
-        persons = Person.objects.all()
-        posts = Post.objects.all()
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
         self.assertEqual(persons.count(), 2)
         self.assertEqual(posts.count(), 2)
 
     def test_delete_bd(self):
-<<<<<<< HEAD
-        like_first = Like.objects.first()
-        like_first.delete()
-
-        follower = Follower.objects.first()
-        follower.delete()
-
-        like_objects = Like.objects.all()
-=======
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
         person_objects = Person.objects.first()
         person_id = person_objects.id
         user_id = person_objects.user
         person_post = Post.objects.filter(user=person_objects.user).first()
         user_id.delete()
-<<<<<<< HEAD
-
-        self.assertEqual(like_objects.count(), 1)
-        self.assertFalse(Follower.objects.first())
-=======
->>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
         self.assertFalse(Person.objects.filter(id=person_id).exists())
         self.assertFalse(Post.objects.filter(id=person_post.id).exists())
