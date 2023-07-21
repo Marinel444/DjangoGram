@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from ..models import Person, Post, Follower
+=======
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
+from ..models import Person, Post
+>>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
 from PIL import Image
 import io
 
@@ -57,6 +65,7 @@ class MyViewTests(TestCase):
                                      'user': self.user.id}, format='multipart')
         self.assertRedirects(response, reverse('profile'))
         self.assertEqual(Post.objects.count(), 2)
+<<<<<<< HEAD
 
     def test_like(self):
         client = Client()
@@ -117,3 +126,5 @@ class AccountUserViewFollowerTest(TestCase):
         response = client.post(reverse('account', args=[self.user1.id]), {'action': 'unsubscribe'})
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Follower.objects.filter(follower_id=self.user1, following_user_id=self.user2).exists())
+=======
+>>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637

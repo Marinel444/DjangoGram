@@ -9,7 +9,11 @@ Profile
         <div class="row g-0">
             <div class="col-md-4">
                 {% if user.photo %}
+<<<<<<< HEAD
                 <img src="{{ user.photo.url }}" class="img-fluid rounded-start" alt="">
+=======
+                <img src="/media/{{ user.photo }}" class="img-fluid rounded-start" alt="">
+>>>>>>> 7c2f54f086d477ec2011c97e4d1829a09c8a1637
                 {% else %}
                 <img src="/media/avatar.jpeg" class="img-fluid rounded-start" alt="">
                 {% endif %}

@@ -1,8 +1,13 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.db.models import Count
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .forms import *
 from gramm.models import *
 from django.http import JsonResponse
 
@@ -27,6 +32,8 @@ def like(request):
 def index(request):
     posts = Post.objects.annotate(like_count=Count('liked_post')).order_by('-id').all()
     return render(request, 'gramm/index.html', {'context': posts})
+    posts = Post.objects.order_by('-id').all()
+    return render(request, 'gramm/index.html', {'posts': posts})
 
 
 def register_user(request):
@@ -54,6 +61,7 @@ def login_user(request):
 @login_required
 def profile_user(request):
     active_user = get_object_or_404(Person, user=request.user)
+    active_user = Person.objects.filter(user=request.user).first()
     posts = Post.objects.filter(user=active_user.user).order_by('-id').all()
     return render(request, 'gramm/profile.html', {'user': active_user, 'posts': posts})
 
