@@ -1,23 +1,64 @@
 {% extends 'gramm/base.html' %}
+{% load static %}
 {% block title %}
 DjangoGramm
 {% endblock %}
 
 {% block content %}
 {% if request.user.is_authenticated %}
-{% for post in posts%}
+{% for item in context %}
 <div class="container-sm">
     <div style="max-width: 600px;" class="mx-auto">
         <div class="card mb-3">
-            <img src="media/{{ post.photo }}" class="card-img-top" alt="...">
+            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
             <div class="card-body">
-                <h5 class="card-title">{{ post.user.username }}</h5>
-                <p class="card-text">{{ post.description }}</p>
-                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                <h5 class="card-title">
+                    <a href="{% url 'account' user_id=item.user.id %}">
+                        {{ item.user.username }}
+                    </a>
+                </h5>
+                <p class="card-text">{{ item.description }}</p>
+                <h5 class="card-title">
+                    <button type="button" class="btn btn-info like-btn" data-post="{{ item.pk }}"
+                            id="post-form-{{ item.pk }}">Лайк
+                    </button>
+                    <p class="card-text likes-count" id="likes-count-{{ item.pk }}">
+                        <small class="text-body-secondary">{{ item.like_count }}</small>
+                    </p>
+                </h5>
             </div>
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#post-form-{{ item.pk }}').on('click', function() {
+        var postID = $(this).data('post');
+        console.log(postID)
+        var likeCountElement = $('#likes-count-' + postID);
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "like" %}',
+            data: {
+                'post_id': postID,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                likeCountElement.text(response.like_count);
+            },
+            error: function (xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+});
+
+
+</script>
+
+
 {% endfor %}
 {% endif %}
 {% endblock %}

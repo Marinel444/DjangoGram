@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# for deploy
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# ALLOWED_HOSTS = ['92.119.231.149']
+# CSRF_TRUSTED_ORIGINS = ['http://92.119.231.149']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -26,6 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     "gramm",
+    "cloudinary",
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -61,10 +69,42 @@ WSGI_APPLICATION = 'DjangoGramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'marinel12345',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
+#     },
+#     'test': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'test_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'marinel12345',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'marinel12345',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
+#     },
+#     'test': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'test_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'marinel12345',
+#         'HOST': 'localhost',
+#         'PORT': '5433',
 #     }
 # }
 
@@ -113,6 +153,14 @@ AUTH_PASSWORD_VALIDATORS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+cloudinary.config(
+    cloud_name="dhr0avnlm",
+    api_key="178563197547516",
+    api_secret="dzNblAamPZQL4QwOWTlBYGF_OTo"
+)
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -127,7 +175,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
