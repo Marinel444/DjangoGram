@@ -26,6 +26,9 @@ def like(request):
 
 def index(request):
     posts = Post.objects.annotate(like_count=Count('liked_post')).order_by('-id').all()
+    if request.user.is_authenticated:
+        if not Person.objects.filter(user=request.user).exists():
+            Person.objects.create(user=request.user)
     return render(request, 'gramm/index.html', {'context': posts})
 
 

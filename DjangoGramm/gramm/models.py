@@ -8,6 +8,11 @@ class Person(models.Model):
     bio = models.TextField(blank=True, null=True)
     photo = CloudinaryField('image', blank=True)
 
+    def set_default_photo(sender, instance, created, **kwargs):
+        if created and not instance.photo:
+            instance.photo = '/media/avatar.jpeg'
+            instance.save()
+
     def __str__(self):
         return self.user.username
 
