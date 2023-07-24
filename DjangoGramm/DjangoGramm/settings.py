@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 import cloudinary
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +26,14 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
+
+SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,7 +45,14 @@ INSTALLED_APPS = [
     "gramm",
     "cloudinary",
     'cloudinary_storage',
+    'social_django',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.github.GithubOAuth2',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,45 +86,6 @@ WSGI_APPLICATION = 'DjangoGramm.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'marinel12345',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     },
-#     'test': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'test_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'marinel12345',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     }
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'marinel12345',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     },
-#     'test': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'test_db',
-#         'USER': 'postgres',
-#         'PASSWORD': 'marinel12345',
-#         'HOST': 'localhost',
-#         'PORT': '5433',
-#     }
-# }
 
 # DATABASES = {
 #     'default': {
@@ -154,9 +133,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 cloudinary.config(
-    cloud_name="dhr0avnlm",
-    api_key="178563197547516",
-    api_secret="dzNblAamPZQL4QwOWTlBYGF_OTo"
+    cloud_name=os.getenv('env_cloud_name'),
+    api_key=os.getenv('cloud_api_key'),
+    api_secret=os.getenv('cloud_api_secret')
 )
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

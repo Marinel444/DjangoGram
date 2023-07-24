@@ -7,6 +7,12 @@ Login
 <div class="container-sm">
     <form method="post">
         {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Sign in</h1>
+        <div class="d-grid gap-2 my-2 d-flex">
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger" style="width: 50%;">with
+                Google+</a>
+            <a href="{% url 'social:begin' 'github' %}" class="btn btn-secondary" style="width: 50%">with Github</a>
+        </div>
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" name="username">
