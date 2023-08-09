@@ -76,8 +76,6 @@ class MyViewTests(TestCase):
         self.assertEqual(data['like_count'], 0)
 
 
-
-
 class AccountUserViewFollowerTest(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username='user1', password='testpassword1')
@@ -117,4 +115,3 @@ class AccountUserViewFollowerTest(TestCase):
         response = client.post(reverse('account', args=[self.user1.id]), {'action': 'unsubscribe'})
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Follower.objects.filter(follower_id=self.user1, following_user_id=self.user2).exists())
-
